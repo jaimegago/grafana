@@ -1,43 +1,72 @@
 module.exports = function(grunt) {
+  "use strict";
 
   // Concat and Minify the src directory into dist
   grunt.registerTask('build', [
     'jshint:source',
-    'clean:on_start',
-    'less:src',
-    'copy:everything_but_less_to_temp',
+    'jshint:tests',
+    'jscs',
+    'exec:tslint',
+    'clean:release',
+    'copy:node_modules',
+    'copy:public_to_gen',
+    'exec:tscompile',
+    'karma:test',
+    'phantomjs',
+    'css',
     'htmlmin:build',
+    'ngtemplates',
     'cssmin:build',
-    'ngmin:build',
-    'requirejs:build',
-    'clean:temp',
-    'build:write_revision',
-    'uglify:dest'
+    'ngAnnotate:build',
+    'systemjs:build',
+    'concat:js',
+    'filerev',
+    'remapFilerev',
+    'usemin',
+    'uglify:genDir'
   ]);
 
-  // run a string replacement on the require config, using the latest revision number as the cache buster
-  grunt.registerTask('build:write_revision', function() {
-    grunt.event.once('git-describe', function (desc) {
-      grunt.config('string-replace.config', {
-        files: {
-          '<%= destDir %>/app/components/require.config.js': '<%= destDir %>/app/components/require.config.js',
-          '<%= destDir %>/app/app.js': '<%= destDir %>/app/app.js'
-        },
-        options: {
-          replacements: [
-            {
-              pattern: /@REV@/g,
-              replacement: desc.object
-            },
-            {
-              pattern: /@grafanaVersion@/g,
-              replacement: 'v<%= pkg.version %>'
-            }
-          ]
-        }
-      });
-      grunt.task.run('string-replace:config');
-    });
-    grunt.task.run('git-describe');
+  // task to add [[.AppSubUrl]] to reved path
+  grunt.registerTask('remapFilerev', function() {
+    var root = grunt.config().genDir;
+    var summary = grunt.filerev.summary;
+    var fixed = {};
+
+    for(var key in summary){
+      if(summary.hasOwnProperty(key)){
+        var orig = key.replace(root, root+'/[[.AppSubUrl]]/public');
+        var revved = summary[key].replace(root, root+'/[[.AppSubUrl]]/public');
+        fixed[orig] = revved;
+      }
+    }
+
+    grunt.filerev.summary = fixed;
   });
+
+  grunt.registerTask('build-post-process', function() {
+    grunt.config('copy.public_gen_to_temp', {
+      expand: true,
+      cwd: '<%= genDir %>',
+      src: '**/*',
+      dest: '<%= tempDir %>/public/',
+    });
+    grunt.config('copy.backend_bin', {
+      cwd: 'bin',
+      expand: true,
+      src: ['*'],
+      options: { mode: true},
+      dest: '<%= tempDir %>/bin/'
+    });
+    grunt.config('copy.backend_files', {
+      expand: true,
+      src: ['conf/defaults.ini', 'conf/sample.ini', 'vendor/phantomjs/*', 'scripts/*'],
+      options: { mode: true},
+      dest: '<%= tempDir %>'
+    });
+
+    grunt.task.run('copy:public_gen_to_temp');
+    grunt.task.run('copy:backend_bin');
+    grunt.task.run('copy:backend_files');
+  });
+
 };

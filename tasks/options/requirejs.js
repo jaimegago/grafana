@@ -1,95 +1,76 @@
 module.exports = function(config,grunt) {
-  var _c = {
-    build: {
-      options: {
-        appDir: '<%= tempDir %>',
-        dir: '<%= destDir %>',
+  'use strict';
 
-        mainConfigFile: '<%= tempDir %>/app/components/require.config.js',
-        modules: [], // populated below
+  function buildRequireJsOptions() {
 
-        optimize: 'none',
-        optimizeCss: 'none',
-        optimizeAllPluginResources: false,
+    var options = {
+      appDir: '<%= genDir %>',
+      dir:  '<%= tempDir %>',
+      mainConfigFile: '<%= genDir %>/app/require_config.js',
+      baseUrl: './',
+      waitSeconds: 0,
 
-        paths: { config: '../config.sample' }, // fix, fallbacks need to be specified
+      modules: [], // populated below,
 
-        removeCombined: true,
-        findNestedDependencies: true,
-        normalizeDirDefines: 'all',
-        inlineText: true,
-        skipPragmas: true,
+      optimize: 'none',
+      optimizeCss: 'none',
+      optimizeAllPluginResources: false,
 
-        done: function (done, output) {
-          var duplicates = require('rjs-build-analysis').duplicates(output);
+      removeCombined: true,
+      findNestedDependencies: true,
+      normalizeDirDefines: 'all',
+      inlineText: true,
+      skipPragmas: true,
 
-          if (duplicates.length > 0) {
-            grunt.log.subhead('Duplicates found in requirejs build:');
-            grunt.log.warn(duplicates);
-            done(new Error('r.js built duplicate modules, please check the excludes option.'));
-          }
+      done: function (done, output) {
+        var duplicates = require('rjs-build-analysis').duplicates(output);
 
-          done();
+        if (duplicates.length > 0) {
+          grunt.log.subhead('Duplicates found in requirejs build:');
+          grunt.log.warn(duplicates);
+          done(new Error('r.js built duplicate modules, please check the excludes option.'));
         }
+
+        done();
       }
-    }
-  };
+    };
 
-  // setup the modules require will build
-  var requireModules = _c.build.options.modules = [
-    {
-      // main/common module
-      name: 'app',
-      include: [
-        'css',
-        'kbn',
-        'text',
-        'jquery',
-        'angular',
-        'settings',
-        'bootstrap',
-        'modernizr',
-        'elasticjs',
-        'timepicker',
-        'datepicker',
-        'underscore',
-        'filters/all',
-        'jquery.flot',
-        'services/all',
-        'angular-strap',
-        'directives/all',
-        'jquery.flot.pie',
-        'angular-sanitize',
-        'angular-dragdrop'
-      ]
-    }
-  ];
+    // setup the modules require will build
+    var requireModules = options.modules = [
+      {
+        // main/common module
+        name: 'app/app',
+        include: [
+          'text',
+          'jquery',
+          'bootstrap',
+          'modernizr',
+          'timepicker',
+          'datepicker',
+          'jquery.flot',
+          'angular-strap',
+          'angular-dragdrop',
+          'app/core/core',
+          'app/features/all',
+          // bundle the datasources
+          'app/plugins/datasource/grafana/datasource',
+          'app/plugins/datasource/graphite/datasource',
+          'app/plugins/datasource/elasticsearch/datasource',
+          'app/plugins/datasource/influxdb/datasource',
+        ]
+      },
+    ];
 
-  var fs = require('fs');
-  var panelPath = config.srcDir+'/app/panels'
+    var fs = require('fs');
+    var panelPath = config.srcDir + '/app/plugins/panel';
 
-  // create a module for each directory in src/app/panels/
-  fs.readdirSync(panelPath).forEach(function (panelName) {
-    if(!grunt.file.exists(panelPath+'/'+panelName+'/module.js')) {
-      fs.readdirSync(panelPath+"/"+panelName).forEach(function (subName) {
-        requireModules.push({
-          name: 'panels/'+panelName+'/'+subName+'/module',
-          exclude: ['app']
-        });      })
-    } else {
-      requireModules.push({
-        name: 'panels/'+panelName+'/module',
-        exclude: ['app']
-      });
-    }
-  });
-
-  // exclude the literal config definition from all modules
-  requireModules
-    .forEach(function (module) {
-      module.excludeShallow = module.excludeShallow || [];
-      module.excludeShallow.push('config');
+    // create a module for each directory in public/app/panel/
+    fs.readdirSync(panelPath).forEach(function (panelName) {
+      requireModules[0].include.push('app/plugins/panel/'+panelName+'/module');
     });
 
-  return _c;
+    return { options: options };
+  }
+
+  return { build: buildRequireJsOptions() };
 };

@@ -1,110 +1,162 @@
-[Grafana](http://grafana.org) [![Build Status](https://api.travis-ci.org/torkelo/grafana.png)](https://travis-ci.org/torkelo/grafana)
-=================
-A beautiful, easy to use and feature rich Graphite dashboard replacement and graph editor. Visit [grafana.org](http://grafana.org) for screenshots, videos and feature descriptions.
+[Grafana](http://grafana.org) [![Circle CI](https://circleci.com/gh/grafana/grafana.svg?style=svg)](https://circleci.com/gh/grafana/grafana) [![Coverage Status](https://coveralls.io/repos/grafana/grafana/badge.png)](https://coveralls.io/r/grafana/grafana)
+================
+[Website](http://grafana.org) |
+[Twitter](https://twitter.com/grafana) |
+[IRC](https://webchat.freenode.net/?channels=grafana) |
+[![Slack](https://brandfolder.com/api/favicon/icon?size=16&domain=www.slack.com)](http://slack.raintank.io)
+[Slack](http://slack.raintank.io) |
+[Email](mailto:contact@grafana.org)
 
-![](http://grafana.org/assets/img/edit_dashboards.png)
+Grafana is an open source, feature rich metrics dashboard and graph editor for
+Graphite, Elasticsearch, OpenTSDB, Prometheus and InfluxDB.
+
+![](http://grafana.org/assets/img/features/dashboard_ex1.png)
+
+- [Install instructions](http://docs.grafana.org/installation/)
+- [What's New in Grafana 2.0](http://docs.grafana.org/guides/whats-new-in-v2/)
+- [What's New in Grafana 2.1](http://docs.grafana.org/guides/whats-new-in-v2-1/)
+- [What's New in Grafana 2.5](http://docs.grafana.org/guides/whats-new-in-v2-5/)
+- [What's New in Grafana 3.0](http://docs.grafana.org/guides/whats-new-in-v3/)
+- [What's New in Grafana 4.0](http://docs.grafana.org/guides/whats-new-in-v4/)
+- [What's New in Grafana 4.1 beta](http://docs.grafana.org/guides/whats-new-in-v4-1/)
 
 ## Features
 ### Graphite Target Editor
 - Graphite target expression parser
-- Quickly add / edit / remove function ([video demo](http://youtu.be/I90WHRwE1ZM))
-- Function parameters can be easily changed
-- Quickly navigate graphite metric structure
-- Templating
-- Integrated links to function documentation
-- Rearrange function order
-- Native Graphite PNG render support
+- Feature rich query composer
+- Quickly add and edit functions & parameters
+- Templated queries
+- [See it in action](http://docs.grafana.org/datasources/graphite/)
 
 ### Graphing
-- Fast rendering, even over large timespans.
-- Click and drag to zoom.
-- Multiple Y-axis.
-- Bars, Lines, Points.
-- Smart Y-axis formating
+- Fast rendering, even over large timespans
+- Click and drag to zoom
+- Multiple Y-axis, logarithmic scales
+- Bars, Lines, Points
+- Smart Y-axis formatting
 - Series toggles & color selector
-- Axis labels
+- Legend values, and formatting options
 - Grid thresholds, axis labels
-- [Annotations] (https://github.com/torkelo/grafana/wiki/Annotations)
+- [Annotations](http://docs.grafana.org/reference/annotations/)
+- Any panel can be rendered to PNG (server side using phantomjs)
 
 ### Dashboards
-- Create and edit dashboards
-- Drag and drop graphs to rearrange
-- Set column spans and row heights
-- Save & [search dashboards](https://github.com/torkelo/grafana/wiki/Search-features)
-- Import & export dashboard (json file)
-- Import dashboard from Graphite
-- Templating
-- [Scripted dashboards](https://github.com/torkelo/grafana/wiki/Scripted-dashboards) (generate from js script and url parameters)
-- Flexible [time range controls](https://github.com/torkelo/grafana/wiki/Time-range-controls)
-- [Dashboard playlists](https://github.com/torkelo/grafana/wiki/Dashboard-playlist)
+- Create, edit, save & search dashboards
+- Change column spans and row heights
+- Drag and drop panels to rearrange
+- [Templating](http://docs.grafana.org/reference/templating/)
+- [Scripted dashboards](http://docs.grafana.org/reference/scripting/)
+- [Dashboard playlists](http://docs.grafana.org/reference/playlist/)
+- [Time range controls](http://docs.grafana.org/reference/timerange/)
+- [Share snapshots publicly](http://docs.grafana.org/v2.0/reference/sharing/)
+
+### Elasticsearch
+- Feature rich query editor UI
 
 ### InfluxDB
-- [Use InfluxDB](https://github.com/torkelo/grafana/wiki/InfluxDB) as metric datasource
+- Use InfluxDB as a metric data source, annotation source
+- Query editor with series and column typeahead, easy group by and function selection
 
-# Requirements
-Grafana is very easy to install. It is a client side web app with no backend. Any webserver will do. Optionally you will need ElasticSearch if you want to be able to save and load dashboards quickly instead of json files or local storage.
+### OpenTSDB
+- Use as metric data source
+- Query editor with metric name typeahead and tag filtering
 
-# Installation
-- Download and extract the [latest release](https://github.com/torkelo/grafana/releases).
-- Edit config.js, then change graphiteUrl and elasticsearch to point to the correct urls. The urls entered here must be reachable by your browser.
-- Point your browser to the installation.
+## Requirements
+There are no dependencies except an external time series data store. For dashboards and user accounts Grafana can use an embedded
+database (sqlite3) or you can use an external SQL data base like MySQL or Postgres.
 
-To run from master:
-- Clone this repository
-- Start a web server in src folder
-- Or create a optimized & minified build:
- - npm install (requires nodejs)
- - grunt build
+## Installation
+Head to [grafana.org](http://docs.grafana.org/installation/) and [download](http://grafana.org/download/)
+the latest release.
 
-When you have Grafana up an running, read the [Getting started](https://github.com/torkelo/grafana/wiki/Getting-started) guide for
-an introduction on how to use Grafana and/or watch [this video](https://www.youtube.com/watch?v=OUvJamHeMpw) for a guide in creating a new dashboard and for creating
-templated dashboards.
+If you have any problems please read the [troubleshooting guide](http://docs.grafana.org/installation/troubleshooting/).
 
-# Graphite server config
-If you haven't used an alternative dashboard for graphite before you need to enable cross-domain origin request. For Apache 2.x:
-```
-Header set Access-Control-Allow-Origin "*"
-Header set Access-Control-Allow-Methods "GET, OPTIONS"
-Header set Access-Control-Allow-Headers "origin, authorization, accept"
-```
-Note that using "\*" leaves your graphite instance quite open so you might want to consider using "http://my.graphite-dom.ain" in place of "\*"
+## Documentation & Support
+Be sure to read the [getting started guide](http://docs.grafana.org/guides/gettingstarted/) and the other feature guides.
 
-If your Graphite web is proteced by basic authentication, you have to enable the HTTP verb OPTIONS, origin
-(no wildcards are allowed in this case) and add Access-Control-Allow-Credentials. This looks like the following for Apache:
-```
-Header set Access-Control-Allow-Origin "http://mygrafana.com:5656"
-Header set Access-Control-Allow-Credentials true
+## Run from master
+If you want to build a package yourself, or contribute. Here is a guide for how to do that. You can always find
+the latest master builds [here](http://grafana.org/builds)
 
-<Location />
-    AuthName "graphs restricted"
-    AuthType Basic
-    AuthUserFile /etc/apache2/htpasswd
-    <LimitExcept OPTIONS>
-      require valid-user
-    </LimitExcept>
-</Location>
+### Dependencies
+
+- Go 1.7.3
+- NodeJS v4+
+
+### Get Code
+
+```bash
+go get github.com/grafana/grafana
 ```
 
-# Roadmap
-- Improve and refine the target parser and editing
-- Improve graphite import feature
-- Refine and simplify common tasks
-- More panel types (not just graphs)
-- Use elasticsearch to search for metrics
-- Improve template support
-- Annotate graph by querying ElasticSearch for events (or other event sources)
-- Add support for other time series databases like InfluxDB
+Since imports of dependencies use the absolute path `github.com/grafana/grafana` within the `$GOPATH`,
+you will need to put your version of the code in `$GOPATH/src/github.com/grafana/grafana` to be able
+to develop and build grafana on a cloned repository. To do so, you can clone your forked repository
+directly to `$GOPATH/src/github.com/grafana` or you can create a symbolic link from your version
+of the code to `$GOPATH/src/github.com/grafana/grafana`. The last options makes it possible to change
+easily the grafana repository you want to build.
+```bash
+go get github.com/*your_account*/grafana
+mkdir $GOPATH/src/github.com/grafana
+ln -s  $GOPATH/src/github.com/*your_account*/grafana $GOPATH/src/github.com/grafana/grafana
+```
 
-# Contribute
-If you have any idea for an improvement or found a bug do not hesitate to open an issue. And if you have time clone this repo and submit a pull request and help me make Grafana the kickass metrics & devops dashboard we all dream about!
+### Building the backend
+```bash
+cd $GOPATH/src/github.com/grafana/grafana
+go run build.go setup
+go run build.go build
+```
 
-Clone repository:
-- npm install
-- grunt server (starts development web server in src folder)
-- grunt (runs jshint and less -> css compilation)
+### Building frontend assets
 
-# Notice
-This software is based on the great log dashboard [kibana](https://github.com/elasticsearch/kibana).
+To build less to css for the frontend you will need a recent version of **node (v4+)**,
+npm (v2.5.0) and grunt (v0.4.5). Run the following:
 
-# License
+```bash
+npm install -g yarn
+yarn install
+npm run build
+```
+
+To build the frontend assets only on changes:
+
+```bash
+sudo npm install -g grunt-cli # to do only once to install grunt command line interface
+grunt watch
+```
+
+### Recompile backend on source change
+To rebuild on source change.
+```bash
+go get github.com/Unknwon/bra
+bra run
+```
+
+### Running
+```bash
+./bin/grafana-server
+```
+
+Open grafana in your browser (default: `http://localhost:3000`) and login with admin user (default: `user/pass = admin/admin`).
+
+### Dev config
+
+Create a custom.ini in the conf directory to override default configuration options.
+You only need to add the options you want to override. Config files are applied in the order of:
+
+1. grafana.ini
+2. dev.ini (if found)
+3. custom.ini
+
+## Create a pull request
+Before or after you create a pull request, sign the [contributor license agreement](http://docs.grafana.org/project/cla/).
+
+## Contribute
+If you have any idea for an improvement or found a bug do not hesitate to open an issue.
+And if you have time clone this repo and submit a pull request and help me make Grafana
+the kickass metrics & devops dashboard we all dream about!
+
+## License
 Grafana is distributed under Apache 2.0 License.
+Work in progress Grafana 2.0 (with included Grafana backend)

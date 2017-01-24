@@ -1,68 +1,30 @@
 module.exports = function(config) {
-  return {
-    zip: {
+  'use strict';
+
+  var task = {
+    release: {
       options: {
-        archive: '<%= tempDir %>/<%= pkg.name %>-latest.zip'
+        archive: '<%= destDir %>/<%= pkg.name %>-<%= pkg.version %>.<%= platform %>-<%= arch %>.tar.gz'
       },
       files : [
         {
           expand: true,
-          cwd: '<%= destDir %>',
+          cwd: '<%= tempDir %>',
           src: ['**/*'],
+          dest: '<%= pkg.name %>-<%= pkg.version %>/',
         },
         {
           expand: true,
           src: ['LICENSE.md', 'README.md', 'NOTICE.md'],
-        }
-      ]
-    },
-    tgz: {
-      options: {
-        archive: '<%= tempDir %>/<%= pkg.name %>-latest.tar.gz'
-      },
-      files : [
-        {
-          expand: true,
-          cwd: '<%= destDir %>',
-          src: ['**/*'],
-        },
-        {
-          expand: true,
-          src: ['LICENSE.md', 'README.md', 'NOTICE.md'],
-        }
-      ]
-    },
-    zip_release: {
-      options: {
-        archive: '<%= tempDir %>/<%= pkg.name %>-<%= pkg.version %>.zip'
-      },
-      files : [
-        {
-          expand: true,
-          cwd: '<%= destDir %>',
-          src: ['**/*'],
-        },
-        {
-          expand: true,
-          src: ['LICENSE.md', 'README.md', 'NOTICE.md'],
-        }
-      ]
-    },
-    tgz_release: {
-      options: {
-        archive: '<%= tempDir %>/<%= pkg.name %>-<%= pkg.version %>.tar.gz'
-      },
-      files : [
-        {
-          expand: true,
-          cwd: '<%= destDir %>',
-          src: ['**/*'],
-        },
-        {
-          expand: true,
-          src: ['LICENSE.md', 'README.md', 'NOTICE.md'],
+          dest: '<%= pkg.name %>-<%= pkg.version %>/',
         }
       ]
     }
   };
+
+  if (config.platform === 'windows') {
+    task.release.options.archive = '<%= destDir %>/<%= pkg.name %>-<%= pkg.version %>.<%= platform %>-<%= arch %>.zip';
+  }
+
+  return task;
 };

@@ -1,14 +1,32 @@
 module.exports = function(config) {
+  'use strict';
+
   return {
     dev: {
-      configFile: 'src/test/karma.conf.js',
+      configFile: 'karma.conf.js',
+      singleRun: false,
+    },
+
+    debug: {
+      configFile: 'karma.conf.js',
       singleRun: false,
       browsers: ['Chrome']
     },
+
     test: {
-      configFile: 'src/test/karma.conf.js',
-      singleRun: true,
-      browsers: ['PhantomJS']
+      configFile: 'karma.conf.js',
+    },
+
+    coveralls: {
+      configFile: 'karma.conf.js',
+      reporters: ['dots','coverage','coveralls'],
+      preprocessors: {
+        'public/app/**/*.js': ['coverage']
+      },
+      coverageReporter: {
+        type: 'lcov',
+        dir: 'coverage/'
+      }
     }
   };
 };
